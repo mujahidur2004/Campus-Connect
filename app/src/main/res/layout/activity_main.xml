@@ -1,19 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/splash_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/app_name"/>
+
     <TextView
+        android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/app_name"
+        android:textColor="@color/app_name"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_marginBottom="8dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/appDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_dis"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginBottom="40dp"/>
+
+    <Button
+        android:id="@+id/get_started"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:minHeight="48dp"
+        android:text="@string/Get_started"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/app_name"/>
+
+</LinearLayout>
