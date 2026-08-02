@@ -37,7 +37,7 @@
             android:textColor="#666666"
             android:layout_marginBottom="24dp"/>
 
-        <!-- Full Name -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
             android:textColorHint="#757575"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Student ID -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
             android:textColorHint="#757575"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Email -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:textColorHint="#757575"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Password -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
