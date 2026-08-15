@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusConnect">
+
+        <!-- Main -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -21,32 +23,70 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Login -->
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+
+        <!-- Register -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
+        <!-- Forgot Password -->
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
+
+        <!-- Home Feed -->
         <activity
             android:name=".HomeFeedActivity"
             android:exported="false" />
+
+        <!-- Create Post -->
         <activity
-            android:name=".create_post"
+            android:name=".CreatePostActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Post Details -->
+        <activity
+            android:name=".PostDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Events -->
+        <activity
+            android:name=".EventActivity"
+            android:exported="false" />
+
+        <!-- Notices -->
+        <activity
+            android:name=".NoticeActivity"
+            android:exported="false" />
+
+        <!-- Profile -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+
+        <!-- Chat List -->
+        <activity
+            android:name=".ChatListActivity"
+            android:exported="false" />
+
+        <!-- Chat Screen -->
+        <activity
+            android:name=".ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".notice"
+            android:name=".PostdetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".profile"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".Event"
+            android:name=".PostDetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>

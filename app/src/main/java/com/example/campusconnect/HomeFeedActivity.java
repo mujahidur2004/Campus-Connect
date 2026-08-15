@@ -9,9 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class HomeFeedActivity extends AppCompatActivity {
 
+    // Create Post
     private LinearLayout btnCreatePost;
 
-    private TextView btnEvents;
+    // First Post
+    private LinearLayout postOne;
+
+    // Bottom Navigation
+    private TextView btnChat;
+    private TextView btnCreate;
     private TextView btnNotices;
     private TextView btnProfile;
 
@@ -20,13 +26,24 @@ public class HomeFeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_feed);
 
-        btnCreatePost = findViewById(R.id.btnCreatePost);
+        // =========================
+        // Find Views
+        // =========================
 
-        btnEvents = findViewById(R.id.btnEvents);
+        btnCreatePost = findViewById(R.id.btnCreatePost);
+        postOne = findViewById(R.id.postOne);
+
+        btnChat = findViewById(R.id.btnChat);
+        btnCreate = findViewById(R.id.btnCreate);
         btnNotices = findViewById(R.id.btnNotices);
         btnProfile = findViewById(R.id.btnProfile);
 
+
+        // =========================
         // Create Post
+        // "What's on your mind?"
+        // =========================
+
         btnCreatePost.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -37,18 +54,58 @@ public class HomeFeedActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Events
-        btnEvents.setOnClickListener(v -> {
+
+        // =========================
+        // Create Post
+        // Bottom + Button
+        // =========================
+
+        btnCreate.setOnClickListener(v -> {
 
             Intent intent = new Intent(
                     HomeFeedActivity.this,
-                    EventActivity.class
+                    CreatePostActivity.class
             );
 
             startActivity(intent);
         });
 
+
+        // =========================
+        // Post Details
+        // First Post
+        // =========================
+
+        postOne.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    PostDetailsActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+
+        // =========================
+        // Chat
+        // =========================
+
+        btnChat.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    ChatListActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+
+        // =========================
         // Notices
+        // =========================
+
         btnNotices.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -59,7 +116,11 @@ public class HomeFeedActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+        // =========================
         // Profile
+        // =========================
+
         btnProfile.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -69,5 +130,6 @@ public class HomeFeedActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+
     }
 }

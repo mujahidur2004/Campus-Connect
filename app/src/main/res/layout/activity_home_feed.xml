@@ -7,10 +7,15 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <!-- Top Header -->
+
+    <!-- ========================= -->
+    <!-- TOP HEADER -->
+    <!-- ========================= -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="18dp"
         android:paddingEnd="18dp"
@@ -26,12 +31,17 @@
             android:textColor="@color/app_name"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btnNotification"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:gravity="center"
             android:text="🔔"
-            android:textSize="24sp"/>
+            android:textSize="23sp"
+            android:clickable="true"
+            android:focusable="true"/>
 
     </LinearLayout>
+
 
     <!-- Divider -->
 
@@ -40,7 +50,10 @@
         android:layout_height="1dp"
         android:background="#E5E5E5"/>
 
-    <!-- Main Content -->
+
+    <!-- ========================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================= -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -54,7 +67,10 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <!-- Create Post -->
+
+            <!-- ========================= -->
+            <!-- CREATE POST -->
+            <!-- ========================= -->
 
             <LinearLayout
                 android:id="@+id/btnCreatePost"
@@ -84,50 +100,94 @@
 
             </LinearLayout>
 
+
             <!-- Space -->
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="12dp"/>
 
-            <!-- Post 1 -->
+
+            <!-- ========================= -->
+            <!-- POST 1 -->
+            <!-- ========================= -->
 
             <LinearLayout
+                android:id="@+id/postOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="15dp"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Md Mujahidur Rahman"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="CSE • 2 hours ago"
-                    android:textSize="13sp"
-                    android:textColor="#777777"/>
+                <!-- User -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:gravity="center"
+                        android:text="👤"
+                        android:textSize="25sp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Md Mujahidur Rahman"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="CSE • 2 hours ago"
+                            android:textSize="13sp"
+                            android:textColor="#777777"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <!-- Post Text -->
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:text="Welcome to CampusConnect! Let's connect, share and grow together."
                     android:textSize="16sp"
                     android:textColor="@color/black"/>
 
-                <View
+
+                <!-- Post Image -->
+
+                <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:background="#EEEEEE"/>
+                    android:layout_height="190dp"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/campus"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Post Image"/>
+
+
+                <!-- Counts -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -140,59 +200,142 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="❤️ 12 Likes"
+                        android:textSize="14sp"
                         android:textColor="#555555"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="💬 5 Comments"
+                        android:textSize="14sp"
                         android:textColor="#555555"/>
+
+                </LinearLayout>
+
+
+                <!-- Divider -->
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"/>
+
+
+                <!-- Action Buttons -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="♡ Like"
+                        android:textSize="14sp"
+                        android:textColor="@color/app_name"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="💬 Comment"
+                        android:textSize="14sp"
+                        android:textColor="@color/app_name"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="↗ Share"
+                        android:textSize="14sp"
+                        android:textColor="@color/app_name"/>
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Post 2 -->
+
+            <!-- ========================= -->
+            <!-- SEPARATOR -->
+            <!-- ========================= -->
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="#F5F5F5"/>
+                android:background="#F3F3F3"/>
+
+
+            <!-- ========================= -->
+            <!-- POST 2 -->
+            <!-- ========================= -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="15dp">
+                android:padding="15dp"
+                android:background="@color/white">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ahmed Rahman"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CSE • 4 hours ago"
-                    android:textSize="13sp"
-                    android:textColor="#777777"/>
+                <!-- User -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:gravity="center"
+                        android:text="👨"
+                        android:textSize="25sp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ahmed Rahman"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CSE • 4 hours ago"
+                            android:textSize="13sp"
+                            android:textColor="#777777"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <!-- Text -->
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:text="Does anyone have Database Management System notes? Please share if possible."
                     android:textSize="16sp"
                     android:textColor="@color/black"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:background="#EEEEEE"/>
+
+                <!-- Counts -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -205,23 +348,77 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="❤️ 18 Likes"
+                        android:textSize="14sp"
                         android:textColor="#555555"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="💬 7 Comments"
+                        android:textSize="14sp"
                         android:textColor="#555555"/>
+
+                </LinearLayout>
+
+
+                <!-- Divider -->
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"/>
+
+
+                <!-- Actions -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="♡ Like"
+                        android:textColor="@color/app_name"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="💬 Comment"
+                        android:textColor="@color/app_name"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="↗ Share"
+                        android:textColor="@color/app_name"/>
 
                 </LinearLayout>
 
             </LinearLayout>
 
+
+            <!-- Bottom Space -->
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- Bottom Navigation -->
+
+    <!-- ========================= -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ========================= -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -230,7 +427,11 @@
         android:gravity="center"
         android:background="@color/white">
 
+
+        <!-- HOME -->
+
         <TextView
+            android:id="@+id/btnHome"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -239,14 +440,39 @@
             android:textSize="13sp"
             android:textColor="@color/app_name"/>
 
+
+        <!-- CHAT -->
+
         <TextView
-            android:id="@+id/btnEvents"
+            android:id="@+id/btnChat"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="📅\nEvents"
-            android:textSize="13sp"/>
+            android:text="💬\nChat"
+            android:textSize="13sp"
+            android:textColor="@color/black"
+            android:clickable="true"
+            android:focusable="true"/>
+
+
+        <!-- CREATE -->
+
+        <TextView
+            android:id="@+id/btnCreate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="＋"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/app_name"
+            android:clickable="true"
+            android:focusable="true"/>
+
+
+        <!-- NOTICES -->
 
         <TextView
             android:id="@+id/btnNotices"
@@ -255,7 +481,13 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="📢\nNotices"
-            android:textSize="13sp"/>
+            android:textSize="13sp"
+            android:textColor="@color/black"
+            android:clickable="true"
+            android:focusable="true"/>
+
+
+        <!-- PROFILE -->
 
         <TextView
             android:id="@+id/btnProfile"
@@ -264,7 +496,10 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="👤\nProfile"
-            android:textSize="13sp"/>
+            android:textSize="13sp"
+            android:textColor="@color/black"
+            android:clickable="true"
+            android:focusable="true"/>
 
     </LinearLayout>
 
