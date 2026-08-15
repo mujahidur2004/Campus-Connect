@@ -85,7 +85,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="student@university.edu"
+            android:hint="student@gmail.com"
             android:inputType="textEmailAddress"
             android:textColor="#000000"
             android:textColorHint="#757575"

@@ -1,24 +1,73 @@
 package com.example.campusconnect;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class HomeFeedActivity extends AppCompatActivity {
+
+    private LinearLayout btnCreatePost;
+
+    private TextView btnEvents;
+    private TextView btnNotices;
+    private TextView btnProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_feed);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        btnCreatePost = findViewById(R.id.btnCreatePost);
+
+        btnEvents = findViewById(R.id.btnEvents);
+        btnNotices = findViewById(R.id.btnNotices);
+        btnProfile = findViewById(R.id.btnProfile);
+
+        // Create Post
+        btnCreatePost.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    CreatePostActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // Events
+        btnEvents.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    EventActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // Notices
+        btnNotices.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    NoticeActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // Profile
+        btnProfile.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    ProfileActivity.class
+            );
+
+            startActivity(intent);
         });
     }
 }
