@@ -12,83 +12,78 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CampusConnect">
 
-        <!-- Main -->
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
-        <!-- Login -->
+        <!-- Login Activity -->
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
 
-        <!-- Register -->
+        <!-- Register Activity -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
 
-        <!-- Forgot Password -->
+        <!-- Forgot Password Activity -->
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
 
-        <!-- Home Feed -->
+        <!-- Home Feed Activity -->
         <activity
             android:name=".HomeFeedActivity"
             android:exported="false" />
 
-        <!-- Create Post -->
+        <!-- Create Post Activity -->
         <activity
             android:name=".CreatePostActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Post Details -->
+        <!-- Post Details Activity -->
         <activity
             android:name=".PostDetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Events -->
+        <!-- Event Activity -->
         <activity
             android:name=".EventActivity"
             android:exported="false" />
 
-        <!-- Notices -->
+        <!-- Notice Activity -->
         <activity
             android:name=".NoticeActivity"
             android:exported="false" />
 
-        <!-- Profile -->
+        <!-- Profile Activity -->
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
 
-        <!-- Chat List -->
+        <!-- Chat List Activity -->
         <activity
             android:name=".ChatListActivity"
             android:exported="false" />
 
-        <!-- Chat Screen -->
+        <!-- Chat Activity -->
         <activity
             android:name=".ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".PostdetailsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".PostDetailsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

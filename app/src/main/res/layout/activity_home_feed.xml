@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-
     <!-- ========================= -->
     <!-- TOP HEADER -->
     <!-- ========================= -->
@@ -42,14 +41,12 @@
 
     </LinearLayout>
 
-
     <!-- Divider -->
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E5E5E5"/>
-
 
     <!-- ========================= -->
     <!-- MAIN CONTENT -->
@@ -66,7 +63,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="12dp">
-
 
             <!-- ========================= -->
             <!-- CREATE POST -->
@@ -100,310 +96,23 @@
 
             </LinearLayout>
 
-
             <!-- Space -->
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="12dp"/>
 
-
             <!-- ========================= -->
-            <!-- POST 1 -->
-            <!-- ========================= -->
-
-            <LinearLayout
-                android:id="@+id/postOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:background="@color/white"
-                android:clickable="true"
-                android:focusable="true">
-
-
-                <!-- User -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:gravity="center"
-                        android:text="👤"
-                        android:textSize="25sp"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Md Mujahidur Rahman"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="CSE • 2 hours ago"
-                            android:textSize="13sp"
-                            android:textColor="#777777"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <!-- Post Text -->
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Welcome to CampusConnect! Let's connect, share and grow together."
-                    android:textSize="16sp"
-                    android:textColor="@color/black"/>
-
-
-                <!-- Post Image -->
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="190dp"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/campus"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="Post Image"/>
-
-
-                <!-- Counts -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="❤️ 12 Likes"
-                        android:textSize="14sp"
-                        android:textColor="#555555"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💬 5 Comments"
-                        android:textSize="14sp"
-                        android:textColor="#555555"/>
-
-                </LinearLayout>
-
-
-                <!-- Divider -->
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#EEEEEE"/>
-
-
-                <!-- Action Buttons -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="♡ Like"
-                        android:textSize="14sp"
-                        android:textColor="@color/app_name"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="💬 Comment"
-                        android:textSize="14sp"
-                        android:textColor="@color/app_name"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="↗ Share"
-                        android:textSize="14sp"
-                        android:textColor="@color/app_name"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <!-- ========================= -->
-            <!-- SEPARATOR -->
-            <!-- ========================= -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="#F3F3F3"/>
-
-
-            <!-- ========================= -->
-            <!-- POST 2 -->
+            <!-- FIREBASE POSTS CONTAINER -->
             <!-- ========================= -->
 
             <LinearLayout
+                android:id="@+id/postsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:background="@color/white">
-
-
-                <!-- User -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:gravity="center"
-                        android:text="👨"
-                        android:textSize="25sp"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ahmed Rahman"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CSE • 4 hours ago"
-                            android:textSize="13sp"
-                            android:textColor="#777777"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <!-- Text -->
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Does anyone have Database Management System notes? Please share if possible."
-                    android:textSize="16sp"
-                    android:textColor="@color/black"/>
-
-
-                <!-- Counts -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="❤️ 18 Likes"
-                        android:textSize="14sp"
-                        android:textColor="#555555"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💬 7 Comments"
-                        android:textSize="14sp"
-                        android:textColor="#555555"/>
-
-                </LinearLayout>
-
-
-                <!-- Divider -->
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#EEEEEE"/>
-
-
-                <!-- Actions -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="♡ Like"
-                        android:textColor="@color/app_name"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="💬 Comment"
-                        android:textColor="@color/app_name"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="↗ Share"
-                        android:textColor="@color/app_name"/>
-
-                </LinearLayout>
+                android:orientation="vertical">
 
             </LinearLayout>
-
 
             <!-- Bottom Space -->
 
@@ -414,7 +123,6 @@
         </LinearLayout>
 
     </ScrollView>
-
 
     <!-- ========================= -->
     <!-- BOTTOM NAVIGATION -->
@@ -427,7 +135,6 @@
         android:gravity="center"
         android:background="@color/white">
 
-
         <!-- HOME -->
 
         <TextView
@@ -436,10 +143,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="🏠\nHome"
+            android:text="🏠&#10;Home"
             android:textSize="13sp"
             android:textColor="@color/app_name"/>
-
 
         <!-- CHAT -->
 
@@ -449,12 +155,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="💬\nChat"
+            android:text="💬&#10;Chat"
             android:textSize="13sp"
             android:textColor="@color/black"
             android:clickable="true"
             android:focusable="true"/>
-
 
         <!-- CREATE -->
 
@@ -471,7 +176,6 @@
             android:clickable="true"
             android:focusable="true"/>
 
-
         <!-- NOTICES -->
 
         <TextView
@@ -480,12 +184,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="📢\nNotices"
+            android:text="📢&#10;Notices"
             android:textSize="13sp"
             android:textColor="@color/black"
             android:clickable="true"
             android:focusable="true"/>
-
 
         <!-- PROFILE -->
 
@@ -495,7 +198,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="👤\nProfile"
+            android:text="👤&#10;Profile"
             android:textSize="13sp"
             android:textColor="@color/black"
             android:clickable="true"
