@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -69,7 +70,7 @@
             android:orientation="vertical">
 
             <!-- ========================= -->
-            <!-- POST CARD -->
+            <!-- POST -->
             <!-- ========================= -->
 
             <LinearLayout
@@ -78,7 +79,9 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- User information -->
+                <!-- ========================= -->
+                <!-- USER INFO -->
+                <!-- ========================= -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,14 +89,14 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <!-- Profile Image -->
+                    <!-- Profile Icon -->
 
-                    <ImageView
+                    <TextView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/logo"
-                        android:scaleType="centerCrop"
-                        android:contentDescription="Profile Image" />
+                        android:gravity="center"
+                        android:text="👤"
+                        android:textSize="26sp" />
 
                     <!-- User Details -->
 
@@ -108,30 +111,30 @@
                             android:id="@+id/tvPostName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="CampusConnect Student"
+                            android:text=""
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/tvPostInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Student"
+                            android:text=""
                             android:textSize="13sp"
                             android:textColor="@android:color/darker_gray"
                             android:layout_marginTop="2dp" />
 
+                        <TextView
+                            android:id="@+id/tvPostTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="12sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:layout_marginTop="2dp" />
+
                     </LinearLayout>
-
-                    <!-- More -->
-
-                    <TextView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:gravity="center"
-                        android:text="⋮"
-                        android:textSize="24sp"
-                        android:textColor="@color/black" />
 
                 </LinearLayout>
 
@@ -144,23 +147,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="This is a CampusConnect post."
+                    android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     android:lineSpacingExtra="4dp" />
-
-                <!-- ========================= -->
-                <!-- POST IMAGE -->
-                <!-- ========================= -->
-
-                <ImageView
-                    android:id="@+id/imgPost"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:layout_marginTop="15dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo"
-                    android:contentDescription="Post Image" />
 
                 <!-- ========================= -->
                 <!-- COUNTS -->
@@ -247,7 +237,7 @@
             </LinearLayout>
 
             <!-- ========================= -->
-            <!-- COMMENTS TITLE -->
+            <!-- COMMENTS -->
             <!-- ========================= -->
 
             <LinearLayout
@@ -256,7 +246,8 @@
                 android:orientation="vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -266,17 +257,13 @@
                     android:textStyle="bold"
                     android:textColor="@color/black" />
 
-                <!-- Firebase comments will appear here -->
-
                 <LinearLayout
                     android:id="@+id/commentContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingTop="8dp"
-                    android:paddingBottom="10dp">
-
-                </LinearLayout>
+                    android:paddingBottom="10dp" />
 
             </LinearLayout>
 

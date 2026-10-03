@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvBack"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="‹"
+                android:textSize="35sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add Notice"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <!-- Notice Title -->
+
+        <EditText
+            android:id="@+id/etNoticeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Notice Title"
+            android:inputType="textCapSentences"
+            android:padding="14dp"/>
+
+        <!-- Category -->
+
+        <EditText
+            android:id="@+id/etNoticeCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="Category (Academic / Exam / Event)"
+            android:inputType="textCapSentences"
+            android:padding="14dp"/>
+
+        <!-- Description -->
+
+        <EditText
+            android:id="@+id/etNoticeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="15dp"
+            android:gravity="top"
+            android:hint="Notice Description"
+            android:inputType="textMultiLine|textCapSentences"
+            android:padding="14dp"/>
+
+        <!-- Important -->
+
+        <Switch
+            android:id="@+id/switchImportant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Mark as Important Notice"
+            android:textSize="16sp"/>
+
+        <!-- Save -->
+
+        <Button
+            android:id="@+id/btnSaveNotice"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="25dp"
+            android:text="Publish Notice"
+            android:textAllCaps="false"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+</ScrollView>

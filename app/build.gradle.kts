@@ -46,12 +46,9 @@ dependencies {
 
     // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
-
-    // Firebase Authentication
     implementation("com.google.firebase:firebase-auth")
-
-    // Cloud Firestore
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)

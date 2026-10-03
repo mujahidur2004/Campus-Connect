@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvBack"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="‹"
+                android:textSize="35sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Notice Details"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <!-- Important -->
+
+        <TextView
+            android:id="@+id/tvNoticeImportant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Regular Notice"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <!-- Title -->
+
+        <TextView
+            android:id="@+id/tvNoticeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Notice Title"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <!-- Category -->
+
+        <TextView
+            android:id="@+id/tvNoticeCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Category: Academic"
+            android:textSize="15sp"/>
+
+        <!-- Creator -->
+
+        <TextView
+            android:id="@+id/tvNoticeCreator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Published by:"
+            android:textSize="14sp"/>
+
+        <!-- Description -->
+
+        <TextView
+            android:id="@+id/tvNoticeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Notice description"
+            android:textSize="17sp"
+            android:lineSpacingExtra="6dp"/>
+
+        <!-- Edit -->
+
+        <Button
+            android:id="@+id/btnEditNotice"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="30dp"
+            android:text="Edit Notice"
+            android:textAllCaps="false"/>
+
+        <!-- Delete -->
+
+        <Button
+            android:id="@+id/btnDeleteNotice"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:text="Delete Notice"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+</ScrollView>

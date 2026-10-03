@@ -26,6 +26,7 @@ public class CreatePostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_create_post);
 
         // Firebase
@@ -37,29 +38,37 @@ public class CreatePostActivity extends AppCompatActivity {
         btnPost = findViewById(R.id.btnPost);
         btnImage = findViewById(R.id.btnImage);
 
-        // Choose Image
+        // Image button
+        // Image upload is not being used
         btnImage.setOnClickListener(v -> {
 
             Toast.makeText(
                     CreatePostActivity.this,
-                    "Image upload will be added next",
+                    "Image upload is not available",
                     Toast.LENGTH_SHORT
             ).show();
-
         });
 
         // Post button
         btnPost.setOnClickListener(v -> createPost());
     }
 
+    // =========================================================
+    // CREATE POST
+    // =========================================================
+
     private void createPost() {
 
-        String postText = etPost.getText().toString().trim();
+        String postText =
+                etPost.getText().toString().trim();
 
-        // Empty post check
+        // Check empty post
         if (postText.isEmpty()) {
 
-            etPost.setError("Please write something");
+            etPost.setError(
+                    "Please write something"
+            );
+
             etPost.requestFocus();
 
             return;
@@ -69,7 +78,7 @@ public class CreatePostActivity extends AppCompatActivity {
         if (firebaseAuth.getCurrentUser() == null) {
 
             Toast.makeText(
-                    CreatePostActivity.this,
+                    this,
                     "Please login first",
                     Toast.LENGTH_SHORT
             ).show();
@@ -77,25 +86,64 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
-        // Get current user information
-        String userId = firebaseAuth.getCurrentUser().getUid();
+        // User ID
+        String userId =
+                firebaseAuth.getCurrentUser().getUid();
 
-        String email = firebaseAuth.getCurrentUser().getEmail();
+        // Email
+        String email =
+                firebaseAuth.getCurrentUser().getEmail();
 
-        // Disable button while saving
+        // Disable button
         btnPost.setEnabled(false);
         btnPost.setText("Posting...");
 
-        // Create post data
-        Map<String, Object> post = new HashMap<>();
+        // =====================================================
+        // POST DATA
+        // =====================================================
 
-        post.put("userId", userId);
-        post.put("email", email);
-        post.put("postText", postText);
-        post.put("timestamp", System.currentTimeMillis());
+        Map<String, Object> post =
+                new HashMap<>();
 
-        // Save to Firestore
-        firestore.collection("posts")
+        post.put(
+                "userId",
+                userId
+        );
+
+        post.put(
+                "email",
+                email
+        );
+
+        post.put(
+                "postText",
+                postText
+        );
+
+        // Initial Like Count
+        post.put(
+                "likeCount",
+                0
+        );
+
+        // Initial Comment Count
+        post.put(
+                "commentCount",
+                0
+        );
+
+        // Timestamp
+        post.put(
+                "timestamp",
+                System.currentTimeMillis()
+        );
+
+        // =====================================================
+        // SAVE TO FIRESTORE
+        // =====================================================
+
+        firestore
+                .collection("posts")
                 .add(post)
                 .addOnSuccessListener(documentReference -> {
 
@@ -106,10 +154,11 @@ public class CreatePostActivity extends AppCompatActivity {
                     ).show();
 
                     // Go to Home Feed
-                    Intent intent = new Intent(
-                            CreatePostActivity.this,
-                            HomeFeedActivity.class
-                    );
+                    Intent intent =
+                            new Intent(
+                                    CreatePostActivity.this,
+                                    HomeFeedActivity.class
+                            );
 
                     intent.setFlags(
                             Intent.FLAG_ACTIVITY_CLEAR_TOP |

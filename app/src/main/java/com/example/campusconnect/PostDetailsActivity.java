@@ -1,6 +1,7 @@
 package com.example.campusconnect;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,12 +18,20 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class PostDetailsActivity extends AppCompatActivity {
 
     private TextView tvBack;
+    private TextView tvPostName;
+    private TextView tvPostInfo;
+    private TextView tvPostText;
+    private TextView tvPostTime;
+
     private TextView tvLikeCount;
     private TextView tvCommentCount;
 
@@ -39,6 +48,7 @@ public class PostDetailsActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
 
     private String postId;
+    private String postOwnerId;
 
     private int likeCount = 0;
     private int commentCount = 0;
@@ -48,37 +58,45 @@ public class PostDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_post_details);
 
-        // Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-        // Get Post ID from HomeFeed
         postId = getIntent().getStringExtra("postId");
 
-        // Check login
         if (firebaseAuth.getCurrentUser() == null) {
-            Toast.makeText(this,
+
+            Toast.makeText(
+                    this,
                     "Please login first",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT
+            ).show();
 
             finish();
             return;
         }
 
-        // Check post ID
-        if (postId == null || postId.isEmpty()) {
-            Toast.makeText(this,
+        if (postId == null || postId.trim().isEmpty()) {
+
+            Toast.makeText(
+                    this,
                     "Post not found",
-                    Toast.LENGTH_SHORT).show();
+                    Toast_SHORT
+            ).show();
 
             finish();
             return;
         }
 
-        // Find Views
         tvBack = findViewById(R.id.tvBack);
+
+        tvPostName = findViewById(R.id.tvPostName);
+        tvPostInfo = findViewById(R.id.tvPostInfo);
+        tvPostText = findViewById(R.id.tvPostText);
+        tvPostTime = findViewById(R.id.tvPostTime);
+
         tvLikeCount = findViewById(R.id.tvLikeCount);
         tvCommentCount = findViewById(R.id.tvCommentCount);
 
@@ -88,53 +106,59 @@ public class PostDetailsActivity extends AppCompatActivity {
         btnSendComment = findViewById(R.id.btnSendComment);
 
         etComment = findViewById(R.id.etComment);
+
         commentContainer = findViewById(R.id.commentContainer);
 
-        // Initial count
+        tvPostName.setText("Loading...");
+        tvPostInfo.setText("");
+        tvPostText.setText("Loading post...");
+        tvPostTime.setText("");
+
         updateCount();
 
-        // Load post data
         loadPost();
-
-        // Check current user's like
         checkUserLike();
-
-        // Load comments
         loadComments();
 
-        // Back button
         tvBack.setOnClickListener(v -> finish());
 
-        // Like button
         btnLike.setOnClickListener(v -> toggleLike());
 
-        // Comment button
         btnComment.setOnClickListener(v -> {
+
             etComment.requestFocus();
+
+            android.view.inputmethod.InputMethodManager imm =
+                    (android.view.inputmethod.InputMethodManager)
+                            getSystemService(INPUT_METHOD_SERVICE);
+
+            if (imm != null) {
+                imm.showSoftInput(
+                        etComment,
+                        android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+                );
+            }
         });
 
-        // Share button
         btnShare.setOnClickListener(v -> sharePost());
 
-        // Send comment
         btnSendComment.setOnClickListener(v -> {
+
             String comment = etComment.getText()
                     .toString()
                     .trim();
 
             if (comment.isEmpty()) {
+
                 etComment.setError("Write a comment");
                 etComment.requestFocus();
+
                 return;
             }
 
             addNewComment(comment);
         });
     }
-
-    // ---------------------------------------------------------
-    // LOAD POST
-    // ---------------------------------------------------------
 
     private void loadPost() {
 
@@ -147,7 +171,7 @@ public class PostDetailsActivity extends AppCompatActivity {
 
                         Toast.makeText(
                                 PostDetailsActivity.this,
-                                "Post not found",
+                                "This post no longer exists",
                                 Toast.LENGTH_SHORT
                         ).show();
 
@@ -155,39 +179,151 @@ public class PostDetailsActivity extends AppCompatActivity {
                         return;
                     }
 
-                    Long likes = documentSnapshot.getLong("likeCount");
-                    Long comments = documentSnapshot.getLong("commentCount");
+                    postOwnerId =
+                            documentSnapshot.getString("userId");
 
-                    if (likes != null) {
-                        likeCount = likes.intValue();
-                    } else {
-                        likeCount = 0;
+                    String postText =
+                            documentSnapshot.getString("postText");
+
+                    if (postText == null ||
+                            postText.trim().isEmpty()) {
+
+                        postText = "No text available";
                     }
 
-                    if (comments != null) {
-                        commentCount = comments.intValue();
-                    } else {
-                        commentCount = 0;
+                    tvPostText.setText(postText);
+
+                    Long likes =
+                            documentSnapshot.getLong("likeCount");
+
+                    likeCount =
+                            likes != null ? likes.intValue() : 0;
+
+                    Long comments =
+                            documentSnapshot.getLong("commentCount");
+
+                    commentCount =
+                            comments != null ? comments.intValue() : 0;
+
+                    Long timestamp =
+                            documentSnapshot.getLong("timestamp");
+
+                    if (timestamp != null) {
+
+                        String formattedDate =
+                                new SimpleDateFormat(
+                                        "dd MMM yyyy, hh:mm a",
+                                        Locale.getDefault()
+                                ).format(
+                                        new Date(timestamp)
+                                );
+
+                        tvPostTime.setText(formattedDate);
                     }
 
                     updateCount();
+
+                    loadPostOwner();
+
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(
-                                PostDetailsActivity.this,
-                                "Failed to load post: " + e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show()
-                );
+                .addOnFailureListener(e -> {
+
+                    Toast.makeText(
+                            PostDetailsActivity.this,
+                            "Failed to load post: "
+                                    + e.getMessage(),
+                            Toast.LENGTH_LONG
+                    ).show();
+                });
     }
 
-    // ---------------------------------------------------------
+    private void loadPostOwner() {
+
+        if (postOwnerId == null ||
+                postOwnerId.trim().isEmpty()) {
+
+            tvPostName.setText("Student");
+            tvPostInfo.setText("");
+
+            return;
+        }
+
+        firestore.collection("users")
+                .document(postOwnerId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+
+                    if (!documentSnapshot.exists()) {
+
+                        tvPostName.setText("Student");
+                        tvPostInfo.setText("");
+
+                        return;
+                    }
+
+                    String name =
+                            documentSnapshot.getString("name");
+
+                    String department =
+                            documentSnapshot.getString("department");
+
+                    String session =
+                            documentSnapshot.getString("session");
+
+                    if (name == null ||
+                            name.trim().isEmpty()) {
+
+                        name = "Student";
+                    }
+
+                    tvPostName.setText(name);
+
+                    StringBuilder info =
+                            new StringBuilder();
+
+                    if (department != null &&
+                            !department.trim().isEmpty()) {
+
+                        info.append(department);
+                    }
+
+                    if (session != null &&
+                            !session.trim().isEmpty()) {
+
+                        if (info.length() > 0) {
+                            info.append(" • ");
+                        }
+
+                        info.append(session);
+                    }
+
+                    if (info.length() > 0) {
+
+                        tvPostInfo.setText(
+                                info.toString()
+                        );
+
+                    } else {
+
+                        tvPostInfo.setText("Student");
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+
+                    tvPostName.setText("Student");
+                    tvPostInfo.setText("Student");
+                });
+    }
+
+    // =========================
     // LIKE / UNLIKE
-    // ---------------------------------------------------------
+    // =========================
 
     private void toggleLike() {
 
         if (firebaseAuth.getCurrentUser() == null) {
+
             Toast.makeText(
                     this,
                     "Please login first",
@@ -197,13 +333,12 @@ public class PostDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        String userId = firebaseAuth.getCurrentUser().getUid();
+        String userId =
+                firebaseAuth.getCurrentUser().getUid();
 
         btnLike.setEnabled(false);
 
         if (liked) {
-
-            // UNLIKE
 
             firestore.collection("posts")
                     .document(postId)
@@ -230,6 +365,7 @@ public class PostDetailsActivity extends AppCompatActivity {
                                     updateCount();
 
                                     btnLike.setEnabled(true);
+
                                 })
                                 .addOnFailureListener(e -> {
 
@@ -256,15 +392,10 @@ public class PostDetailsActivity extends AppCompatActivity {
 
         } else {
 
-            // LIKE
+            Map<String, Object> likeData =
+                    new HashMap<>();
 
-            Map<String, Object> likeData = new HashMap<>();
-
-            likeData.put(
-                    "userId",
-                    userId
-            );
-
+            likeData.put("userId", userId);
             likeData.put(
                     "timestamp",
                     System.currentTimeMillis()
@@ -286,12 +417,19 @@ public class PostDetailsActivity extends AppCompatActivity {
                                 .addOnSuccessListener(unused2 -> {
 
                                     liked = true;
+
                                     likeCount++;
 
                                     updateLikeButton();
                                     updateCount();
 
                                     btnLike.setEnabled(true);
+
+                                    createNotification(
+                                            "like",
+                                            "liked your post"
+                                    );
+
                                 })
                                 .addOnFailureListener(e -> {
 
@@ -318,17 +456,14 @@ public class PostDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // ---------------------------------------------------------
-    // CHECK USER LIKE
-    // ---------------------------------------------------------
-
     private void checkUserLike() {
 
         if (firebaseAuth.getCurrentUser() == null) {
             return;
         }
 
-        String userId = firebaseAuth.getCurrentUser().getUid();
+        String userId =
+                firebaseAuth.getCurrentUser().getUid();
 
         firestore.collection("posts")
                 .document(postId)
@@ -343,25 +478,14 @@ public class PostDetailsActivity extends AppCompatActivity {
                 });
     }
 
-    // ---------------------------------------------------------
-    // LIKE BUTTON UI
-    // ---------------------------------------------------------
-
     private void updateLikeButton() {
 
         if (liked) {
-
             btnLike.setText("❤️ Liked");
-
         } else {
-
             btnLike.setText("♡ Like");
         }
     }
-
-    // ---------------------------------------------------------
-    // UPDATE COUNT
-    // ---------------------------------------------------------
 
     private void updateCount() {
 
@@ -374,13 +498,14 @@ public class PostDetailsActivity extends AppCompatActivity {
         );
     }
 
-    // ---------------------------------------------------------
+    // =========================
     // ADD COMMENT
-    // ---------------------------------------------------------
+    // =========================
 
     private void addNewComment(String commentText) {
 
         if (firebaseAuth.getCurrentUser() == null) {
+
             Toast.makeText(
                     this,
                     "Please login first",
@@ -402,21 +527,9 @@ public class PostDetailsActivity extends AppCompatActivity {
         Map<String, Object> commentData =
                 new HashMap<>();
 
-        commentData.put(
-                "userId",
-                userId
-        );
-
-        commentData.put(
-                "email",
-                email
-        );
-
-        commentData.put(
-                "commentText",
-                commentText
-        );
-
+        commentData.put("userId", userId);
+        commentData.put("email", email);
+        commentData.put("commentText", commentText);
         commentData.put(
                 "timestamp",
                 System.currentTimeMillis()
@@ -451,7 +564,13 @@ public class PostDetailsActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT
                                 ).show();
 
+                                createNotification(
+                                        "comment",
+                                        "commented on your post"
+                                );
+
                                 loadComments();
+
                             })
                             .addOnFailureListener(e -> {
 
@@ -473,16 +592,106 @@ public class PostDetailsActivity extends AppCompatActivity {
 
                     Toast.makeText(
                             PostDetailsActivity.this,
-                            "Failed to add comment: " +
-                                    e.getMessage(),
+                            "Failed to add comment: "
+                                    + e.getMessage(),
                             Toast.LENGTH_LONG
                     ).show();
                 });
     }
 
-    // ---------------------------------------------------------
+    // =========================
+    // NOTIFICATION
+    // =========================
+
+    private void createNotification(
+            String type,
+            String action
+    ) {
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            return;
+        }
+
+        if (postOwnerId == null ||
+                postOwnerId.trim().isEmpty()) {
+            return;
+        }
+
+        String currentUserId =
+                firebaseAuth.getCurrentUser().getUid();
+
+        if (postOwnerId.equals(currentUserId)) {
+            return;
+        }
+
+        String currentUserEmail =
+                firebaseAuth.getCurrentUser().getEmail();
+
+        firestore.collection("users")
+                .document(currentUserId)
+                .get()
+                .addOnSuccessListener(userDocument -> {
+
+                    String senderName =
+                            userDocument.getString("name");
+
+                    if (senderName == null ||
+                            senderName.trim().isEmpty()) {
+
+                        senderName = currentUserEmail;
+                    }
+
+                    saveNotification(
+                            senderName,
+                            currentUserId,
+                            type,
+                            action
+                    );
+
+                })
+                .addOnFailureListener(e -> {
+
+                    saveNotification(
+                            currentUserEmail,
+                            currentUserId,
+                            type,
+                            action
+                    );
+                });
+    }
+
+    private void saveNotification(
+            String senderName,
+            String senderId,
+            String type,
+            String action
+    ) {
+
+        Map<String, Object> notification =
+                new HashMap<>();
+
+        notification.put("recipientId", postOwnerId);
+        notification.put("senderId", senderId);
+        notification.put("senderName", senderName);
+        notification.put("type", type);
+        notification.put(
+                "message",
+                senderName + " " + action
+        );
+        notification.put("postId", postId);
+        notification.put(
+                "timestamp",
+                System.currentTimeMillis()
+        );
+        notification.put("read", false);
+
+        firestore.collection("notifications")
+                .add(notification);
+    }
+
+    // =========================
     // LOAD COMMENTS
-    // ---------------------------------------------------------
+    // =========================
 
     private void loadComments() {
 
@@ -501,43 +710,97 @@ public class PostDetailsActivity extends AppCompatActivity {
                     for (DocumentSnapshot document :
                             queryDocumentSnapshots.getDocuments()) {
 
+                        String userId =
+                                document.getString("userId");
+
                         String email =
                                 document.getString("email");
 
                         String commentText =
                                 document.getString("commentText");
 
-                        if (email == null) {
-                            email = "Student";
-                        }
-
                         if (commentText == null) {
                             commentText = "";
                         }
 
-                        addCommentToUI(
+                        loadCommentUser(
+                                userId,
                                 email,
                                 commentText
                         );
                     }
 
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(
-                                PostDetailsActivity.this,
-                                "Failed to load comments: " +
-                                        e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show()
-                );
+                .addOnFailureListener(e -> {
+
+                    Toast.makeText(
+                            PostDetailsActivity.this,
+                            "Failed to load comments: "
+                                    + e.getMessage(),
+                            Toast.LENGTH_LONG
+                    ).show();
+                });
     }
 
-    // ---------------------------------------------------------
-    // ADD COMMENT TO UI
-    // ---------------------------------------------------------
+    private void loadCommentUser(
+            String userId,
+            String email,
+            String commentText
+    ) {
+
+        if (userId == null ||
+                userId.trim().isEmpty()) {
+
+            addCommentToUI(
+                    email != null ? email : "Student",
+                    commentText
+            );
+
+            return;
+        }
+
+        firestore.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+
+                    String name =
+                            documentSnapshot.getString("name");
+
+                    if (name == null ||
+                            name.trim().isEmpty()) {
+
+                        name = email;
+                    }
+
+                    if (name == null ||
+                            name.trim().isEmpty()) {
+
+                        name = "Student";
+                    }
+
+                    addCommentToUI(
+                            name,
+                            commentText
+                    );
+
+                })
+                .addOnFailureListener(e -> {
+
+                    String name =
+                            email != null
+                                    ? email
+                                    : "Student";
+
+                    addCommentToUI(
+                            name,
+                            commentText
+                    );
+                });
+    }
 
     private void addCommentToUI(
-            String userEmail,
+            String userNameText,
             String commentText
     ) {
 
@@ -555,12 +818,10 @@ public class PostDetailsActivity extends AppCompatActivity {
                 10
         );
 
-        // User name/email
         TextView userName =
                 new TextView(this);
 
-        userName.setText(userEmail);
-
+        userName.setText(userNameText);
         userName.setTextSize(15);
 
         userName.setTextColor(
@@ -571,15 +832,13 @@ public class PostDetailsActivity extends AppCompatActivity {
 
         userName.setTypeface(
                 null,
-                android.graphics.Typeface.BOLD
+                Typeface.BOLD
         );
 
-        // Comment
         TextView comment =
                 new TextView(this);
 
         comment.setText(commentText);
-
         comment.setTextSize(14);
 
         comment.setTextColor(
@@ -603,11 +862,14 @@ public class PostDetailsActivity extends AppCompatActivity {
         );
     }
 
-    // ---------------------------------------------------------
-    // SHARE POST
-    // ---------------------------------------------------------
-
     private void sharePost() {
+
+        String text =
+                tvPostName.getText().toString()
+                        + "\n\n"
+                        + tvPostText.getText().toString()
+                        + "\n\n"
+                        + "Shared from CampusConnect";
 
         Intent shareIntent =
                 new Intent(Intent.ACTION_SEND);
@@ -616,7 +878,7 @@ public class PostDetailsActivity extends AppCompatActivity {
 
         shareIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Check out this post on CampusConnect!"
+                text
         );
 
         startActivity(

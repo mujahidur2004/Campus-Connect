@@ -1,63 +1,150 @@
 package com.example.campusconnect;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public class HomeFeedActivity extends AppCompatActivity {
 
-    private LinearLayout btnCreatePost;
-    private LinearLayout postsContainer;
+    // =====================================================
+    // FIREBASE
+    // =====================================================
 
-    private TextView btnChat;
-    private TextView btnCreate;
-    private TextView btnNotices;
-    private TextView btnProfile;
-
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+
+    // =====================================================
+    // UI
+    // =====================================================
+
+    private LinearLayout postsContainer;
+    private LinearLayout btnCreatePost;
+
+    private TextView btnNotification;
+
+    private Button btnHome;
+    private Button btnChat;
+    private Button btnNotices;
+    private Button btnEvents;
+    private Button btnProfile;
+
+    // =====================================================
+    // CURRENT USER
+    // =====================================================
+
+    private String currentUserId;
+
+    // =====================================================
+    // ON CREATE
+    // =====================================================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home_feed);
 
         // Firebase
-        firebaseAuth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-        // Find Views
-        btnCreatePost = findViewById(R.id.btnCreatePost);
-        postsContainer = findViewById(R.id.postsContainer);
+        // Check login
+        if (auth.getCurrentUser() == null) {
 
-        btnChat = findViewById(R.id.btnChat);
-        btnCreate = findViewById(R.id.btnCreate);
-        btnNotices = findViewById(R.id.btnNotices);
-        btnProfile = findViewById(R.id.btnProfile);
+            Toast.makeText(
+                    this,
+                    "Please login first",
+                    Toast.LENGTH_SHORT
+            ).show();
 
-        // Create Post
-        btnCreatePost.setOnClickListener(v -> openCreatePost());
+            finish();
+            return;
+        }
 
-        // Bottom Create
-        btnCreate.setOnClickListener(v -> openCreatePost());
+        currentUserId = auth.getCurrentUser().getUid();
 
-        // Chat
+        // =================================================
+        // FIND VIEWS
+        // =================================================
+
+        postsContainer =
+                findViewById(R.id.postsContainer);
+
+        btnNotification =
+                findViewById(R.id.btnNotification);
+
+        btnCreatePost =
+                findViewById(R.id.btnCreatePost);
+
+        btnHome =
+                findViewById(R.id.btnHome);
+
+        btnChat =
+                findViewById(R.id.btnChat);
+
+        btnNotices =
+                findViewById(R.id.btnNotices);
+
+        btnEvents =
+                findViewById(R.id.btnEvents);
+
+        btnProfile =
+                findViewById(R.id.btnProfile);
+
+        // =================================================
+        // NOTIFICATION
+        // =================================================
+
+        btnNotification.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    NotificationActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // =================================================
+        // CREATE POST
+        // =================================================
+
+        btnCreatePost.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    CreatePostActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // =================================================
+        // HOME
+        // =================================================
+
+        btnHome.setOnClickListener(v -> {
+
+            loadPosts();
+        });
+
+        // =================================================
+        // CHAT
+        // =================================================
+
         btnChat.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -68,7 +155,10 @@ public class HomeFeedActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Notices
+        // =================================================
+        // NOTICES
+        // =================================================
+
         btnNotices.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -79,7 +169,24 @@ public class HomeFeedActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Profile
+        // =================================================
+        // EVENTS
+        // =================================================
+
+        btnEvents.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HomeFeedActivity.this,
+                    EventActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // =================================================
+        // PROFILE
+        // =================================================
+
         btnProfile.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -90,88 +197,101 @@ public class HomeFeedActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Load posts
+        // =================================================
+        // LOAD POSTS
+        // =================================================
+
         loadPosts();
     }
 
     // =====================================================
-    // Open Create Post
+    // ON RESUME
     // =====================================================
 
-    private void openCreatePost() {
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        Intent intent = new Intent(
-                HomeFeedActivity.this,
-                CreatePostActivity.class
-        );
+        if (auth != null &&
+                auth.getCurrentUser() != null) {
 
-        startActivity(intent);
+            loadPosts();
+        }
     }
 
     // =====================================================
-    // Load Posts From Firestore
+    // LOAD POSTS
     // =====================================================
 
     private void loadPosts() {
 
-        if (firebaseAuth.getCurrentUser() == null) {
-
-            Toast.makeText(
-                    this,
-                    "Please login first",
-                    Toast.LENGTH_SHORT
-            ).show();
-
+        if (postsContainer == null) {
             return;
         }
 
+        postsContainer.removeAllViews();
+
         firestore.collection("posts")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .orderBy(
+                        "timestamp",
+                        Query.Direction.DESCENDING
+                )
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                    // Remove previously loaded Firebase posts
-                    postsContainer.removeAllViews();
-
                     if (queryDocumentSnapshots.isEmpty()) {
 
-                        TextView emptyText = new TextView(
-                                HomeFeedActivity.this
-                        );
-
-                        emptyText.setText(
-                                "No posts yet.\nBe the first to create a post!"
-                        );
-
-                        emptyText.setTextSize(16);
-                        emptyText.setTextColor(Color.GRAY);
-                        emptyText.setGravity(Gravity.CENTER);
-                        emptyText.setPadding(20, 50, 20, 50);
-
-                        postsContainer.addView(emptyText);
-
+                        showNoPosts();
                         return;
                     }
 
-                    // Add Firebase posts
-                    for (DocumentSnapshot document :
-                            queryDocumentSnapshots.getDocuments()) {
+                    queryDocumentSnapshots.forEach(
+                            documentSnapshot -> {
 
-                        String postText =
-                                document.getString("postText");
+                                String postId =
+                                        documentSnapshot.getId();
 
-                        String email =
-                                document.getString("email");
+                                String userId =
+                                        documentSnapshot.getString(
+                                                "userId"
+                                        );
 
-                        Long timestamp =
-                                document.getLong("timestamp");
+                                String postText =
+                                        documentSnapshot.getString(
+                                                "postText"
+                                        );
 
-                        addPostToFeed(
-                                postText,
-                                email,
-                                timestamp
-                        );
-                    }
+                                Long likeCount =
+                                        documentSnapshot.getLong(
+                                                "likeCount"
+                                        );
+
+                                Long commentCount =
+                                        documentSnapshot.getLong(
+                                                "commentCount"
+                                        );
+
+                                if (postText == null) {
+                                    postText = "";
+                                }
+
+                                if (likeCount == null) {
+                                    likeCount = 0L;
+                                }
+
+                                if (commentCount == null) {
+                                    commentCount = 0L;
+                                }
+
+                                loadPostUser(
+                                        postId,
+                                        userId,
+                                        postText,
+                                        likeCount,
+                                        commentCount
+                                );
+                            }
+                    );
                 })
                 .addOnFailureListener(e -> {
 
@@ -185,51 +305,186 @@ public class HomeFeedActivity extends AppCompatActivity {
     }
 
     // =====================================================
-    // Create Post UI
+    // LOAD USER INFORMATION
     // =====================================================
 
-    private void addPostToFeed(
+    private void loadPostUser(
+            String postId,
+            String userId,
             String postText,
-            String email,
-            Long timestamp
+            Long likeCount,
+            Long commentCount
     ) {
 
-        // Main Post Layout
-        LinearLayout postLayout =
-                new LinearLayout(this);
+        if (userId == null || userId.isEmpty()) {
 
-        postLayout.setOrientation(
-                LinearLayout.VERTICAL
+            addPostCard(
+                    postId,
+                    "CampusConnect Student",
+                    "Student",
+                    "",
+                    postText,
+                    likeCount,
+                    commentCount
+            );
+
+            return;
+        }
+
+        firestore.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+
+                    String name =
+                            documentSnapshot.getString("name");
+
+                    String department =
+                            documentSnapshot.getString(
+                                    "department"
+                            );
+
+                    String session =
+                            documentSnapshot.getString(
+                                    "session"
+                            );
+
+                    if (name == null ||
+                            name.isEmpty()) {
+
+                        name =
+                                "CampusConnect Student";
+                    }
+
+                    if (department == null ||
+                            department.isEmpty()) {
+
+                        department = "Student";
+                    }
+
+                    if (session == null) {
+                        session = "";
+                    }
+
+                    addPostCard(
+                            postId,
+                            name,
+                            department,
+                            session,
+                            postText,
+                            likeCount,
+                            commentCount
+                    );
+                })
+                .addOnFailureListener(e -> {
+
+                    addPostCard(
+                            postId,
+                            "CampusConnect Student",
+                            "Student",
+                            "",
+                            postText,
+                            likeCount,
+                            commentCount
+                    );
+                });
+    }
+
+    // =====================================================
+    // NO POSTS
+    // =====================================================
+
+    private void showNoPosts() {
+
+        TextView textView =
+                new TextView(this);
+
+        textView.setText(
+                "No posts available yet."
         );
 
-        postLayout.setPadding(
-                15,
-                15,
-                15,
-                15
+        textView.setTextSize(16);
+
+        textView.setTextColor(
+                getResources().getColor(
+                        android.R.color.darker_gray
+                )
         );
 
-        postLayout.setBackgroundColor(
-                Color.WHITE
+        textView.setGravity(
+                Gravity.CENTER
         );
 
-        LinearLayout.LayoutParams postParams =
+        textView.setPadding(
+                20,
+                50,
+                20,
+                50
+        );
+
+        postsContainer.addView(textView);
+    }
+
+    // =====================================================
+    // ADD POST CARD
+    // =====================================================
+
+    private void addPostCard(
+            String postId,
+            String userName,
+            String department,
+            String session,
+            String postText,
+            Long likeCount,
+            Long commentCount
+    ) {
+
+        // =================================================
+        // CARD
+        // =================================================
+
+        CardView cardView =
+                new CardView(this);
+
+        LinearLayout.LayoutParams cardParams =
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
 
-        postParams.setMargins(
+        cardParams.setMargins(
                 0,
                 0,
                 0,
+                12
+        );
+
+        cardView.setLayoutParams(cardParams);
+
+        cardView.setCardElevation(2);
+
+        cardView.setRadius(4);
+
+        // =================================================
+        // MAIN LAYOUT
+        // =================================================
+
+        LinearLayout mainLayout =
+                new LinearLayout(this);
+
+        mainLayout.setOrientation(
+                LinearLayout.VERTICAL
+        );
+
+        mainLayout.setPadding(
+                15,
+                15,
+                15,
                 10
         );
 
-        postLayout.setLayoutParams(postParams);
-
         // =================================================
-        // User Section
+        // USER HEADER
         // =================================================
 
         LinearLayout userLayout =
@@ -243,25 +498,31 @@ public class HomeFeedActivity extends AppCompatActivity {
                 Gravity.CENTER_VERTICAL
         );
 
-        // User icon
-        TextView userIcon =
+        // Avatar
+
+        TextView avatar =
                 new TextView(this);
 
-        userIcon.setText("👤");
-        userIcon.setTextSize(25);
-        userIcon.setGravity(Gravity.CENTER);
+        avatar.setText("👤");
 
-        LinearLayout.LayoutParams iconParams =
+        avatar.setTextSize(25);
+
+        avatar.setGravity(
+                Gravity.CENTER
+        );
+
+        LinearLayout.LayoutParams avatarParams =
                 new LinearLayout.LayoutParams(
                         45,
                         45
                 );
 
-        userIcon.setLayoutParams(iconParams);
-
-        userLayout.addView(userIcon);
+        avatar.setLayoutParams(
+                avatarParams
+        );
 
         // User info
+
         LinearLayout userInfo =
                 new LinearLayout(this);
 
@@ -271,8 +532,9 @@ public class HomeFeedActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams infoParams =
                 new LinearLayout.LayoutParams(
+                        0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
+                        1
                 );
 
         infoParams.setMargins(
@@ -282,84 +544,102 @@ public class HomeFeedActivity extends AppCompatActivity {
                 0
         );
 
-        userInfo.setLayoutParams(infoParams);
+        userInfo.setLayoutParams(
+                infoParams
+        );
 
-        // Email
-        TextView userName =
+        // Name
+
+        TextView tvName =
                 new TextView(this);
 
-        if (email != null && !email.isEmpty()) {
-            userName.setText(email);
-        } else {
-            userName.setText("CampusConnect User");
-        }
+        tvName.setText(userName);
 
-        userName.setTextSize(17);
-        userName.setTextColor(Color.BLACK);
-        userName.setTypeface(
+        tvName.setTextSize(17);
+
+        tvName.setTextColor(
+                getResources().getColor(
+                        android.R.color.black
+                )
+        );
+
+        tvName.setTypeface(
                 null,
                 Typeface.BOLD
         );
 
-        userInfo.addView(userName);
+        // Department + Session
 
-        // Time
-        TextView postTime =
+        TextView tvDepartment =
                 new TextView(this);
 
-        postTime.setText(
-                getTimeText(timestamp)
+        String departmentText;
+
+        if (session != null &&
+                !session.isEmpty()) {
+
+            departmentText =
+                    department + " • " + session;
+
+        } else {
+
+            departmentText =
+                    department;
+        }
+
+        tvDepartment.setText(
+                departmentText
         );
 
-        postTime.setTextSize(13);
-        postTime.setTextColor(Color.GRAY);
+        tvDepartment.setTextSize(13);
 
-        userInfo.addView(postTime);
+        tvDepartment.setTextColor(
+                getResources().getColor(
+                        android.R.color.darker_gray
+                )
+        );
+
+        userInfo.addView(tvName);
+
+        userInfo.addView(tvDepartment);
+
+        userLayout.addView(avatar);
 
         userLayout.addView(userInfo);
 
-        postLayout.addView(userLayout);
-
         // =================================================
-        // Post Text
+        // POST TEXT
         // =================================================
 
-        TextView postTextView =
+        TextView tvPost =
                 new TextView(this);
 
-        postTextView.setText(
-                postText != null ? postText : ""
+        tvPost.setText(postText);
+
+        tvPost.setTextSize(16);
+
+        tvPost.setTextColor(
+                getResources().getColor(
+                        android.R.color.black
+                )
         );
 
-        postTextView.setTextSize(16);
-        postTextView.setTextColor(Color.BLACK);
-
-        LinearLayout.LayoutParams textParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-
-        textParams.setMargins(
+        tvPost.setPadding(
                 0,
-                12,
+                15,
                 0,
-                12
+                10
         );
 
-        postTextView.setLayoutParams(textParams);
-
-        postLayout.addView(postTextView);
-
         // =================================================
-        // Divider
+        // DIVIDER
         // =================================================
 
-        TextView divider =
-                new TextView(this);
+        View divider =
+                new View(this);
 
         divider.setBackgroundColor(
-                Color.parseColor("#EEEEEE")
+                0xFFE0E0E0
         );
 
         LinearLayout.LayoutParams dividerParams =
@@ -368,12 +648,87 @@ public class HomeFeedActivity extends AppCompatActivity {
                         1
                 );
 
-        divider.setLayoutParams(dividerParams);
-
-        postLayout.addView(divider);
+        divider.setLayoutParams(
+                dividerParams
+        );
 
         // =================================================
-        // Action Buttons
+        // COUNT LAYOUT
+        // =================================================
+
+        LinearLayout countLayout =
+                new LinearLayout(this);
+
+        countLayout.setOrientation(
+                LinearLayout.HORIZONTAL
+        );
+
+        countLayout.setGravity(
+                Gravity.CENTER_VERTICAL
+        );
+
+        countLayout.setPadding(
+                0,
+                8,
+                0,
+                8
+        );
+
+        // Like count
+
+        TextView tvLikeCount =
+                new TextView(this);
+
+        tvLikeCount.setText(
+                "❤️ " + likeCount + " Likes"
+        );
+
+        tvLikeCount.setTextSize(14);
+
+        tvLikeCount.setTextColor(
+                getResources().getColor(
+                        android.R.color.darker_gray
+                )
+        );
+
+        LinearLayout.LayoutParams likeParams =
+                new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1
+                );
+
+        tvLikeCount.setLayoutParams(
+                likeParams
+        );
+
+        // Comment count
+
+        TextView tvCommentCount =
+                new TextView(this);
+
+        tvCommentCount.setText(
+                "💬 " + commentCount + " Comments"
+        );
+
+        tvCommentCount.setTextSize(14);
+
+        tvCommentCount.setTextColor(
+                getResources().getColor(
+                        android.R.color.darker_gray
+                )
+        );
+
+        countLayout.addView(
+                tvLikeCount
+        );
+
+        countLayout.addView(
+                tvCommentCount
+        );
+
+        // =================================================
+        // ACTION LAYOUT
         // =================================================
 
         LinearLayout actionLayout =
@@ -387,140 +742,239 @@ public class HomeFeedActivity extends AppCompatActivity {
                 Gravity.CENTER
         );
 
-        // Like
-        TextView likeButton =
-                new TextView(this);
+        // =================================================
+        // LIKE BUTTON
+        // =================================================
 
-        likeButton.setText("♡ Like");
-        likeButton.setTextSize(14);
-        likeButton.setTextColor(
+        Button btnLike =
+                new Button(this);
+
+        btnLike.setText("♡ Like");
+
+        btnLike.setAllCaps(false);
+
+        btnLike.setTextSize(13);
+
+        btnLike.setTextColor(
                 getResources().getColor(
                         R.color.app_name
                 )
         );
-        likeButton.setGravity(
-                Gravity.CENTER
+
+        btnLike.setBackgroundColor(
+                android.graphics.Color.TRANSPARENT
         );
 
-        LinearLayout.LayoutParams likeParams =
+        LinearLayout.LayoutParams likeButtonParams =
                 new LinearLayout.LayoutParams(
                         0,
                         50,
                         1
                 );
 
-        likeButton.setLayoutParams(
-                likeParams
+        btnLike.setLayoutParams(
+                likeButtonParams
         );
 
-        // Comment
-        TextView commentButton =
-                new TextView(this);
+        // =================================================
+        // COMMENT BUTTON
+        // =================================================
 
-        commentButton.setText("💬 Comment");
-        commentButton.setTextSize(14);
-        commentButton.setTextColor(
+        Button btnComment =
+                new Button(this);
+
+        btnComment.setText(
+                "💬 Comment"
+        );
+
+        btnComment.setAllCaps(false);
+
+        btnComment.setTextSize(13);
+
+        btnComment.setTextColor(
                 getResources().getColor(
                         R.color.app_name
                 )
         );
-        commentButton.setGravity(
-                Gravity.CENTER
+
+        btnComment.setBackgroundColor(
+                android.graphics.Color.TRANSPARENT
         );
 
-        LinearLayout.LayoutParams commentParams =
+        LinearLayout.LayoutParams commentButtonParams =
                 new LinearLayout.LayoutParams(
                         0,
                         50,
                         1
                 );
 
-        commentButton.setLayoutParams(
-                commentParams
+        btnComment.setLayoutParams(
+                commentButtonParams
         );
 
-        // Share
-        TextView shareButton =
-                new TextView(this);
+        // =================================================
+        // SHARE BUTTON
+        // =================================================
 
-        shareButton.setText("↗ Share");
-        shareButton.setTextSize(14);
-        shareButton.setTextColor(
+        Button btnShare =
+                new Button(this);
+
+        btnShare.setText(
+                "↗ Share"
+        );
+
+        btnShare.setAllCaps(false);
+
+        btnShare.setTextSize(13);
+
+        btnShare.setTextColor(
                 getResources().getColor(
                         R.color.app_name
                 )
         );
-        shareButton.setGravity(
-                Gravity.CENTER
+
+        btnShare.setBackgroundColor(
+                android.graphics.Color.TRANSPARENT
         );
 
-        LinearLayout.LayoutParams shareParams =
+        LinearLayout.LayoutParams shareButtonParams =
                 new LinearLayout.LayoutParams(
                         0,
                         50,
                         1
                 );
 
-        shareButton.setLayoutParams(
-                shareParams
+        btnShare.setLayoutParams(
+                shareButtonParams
+        );
+
+        // =================================================
+        // CLICK LISTENERS
+        // =================================================
+
+        btnLike.setOnClickListener(v -> {
+
+            openPostDetails(postId);
+        });
+
+        btnComment.setOnClickListener(v -> {
+
+            openPostDetails(postId);
+        });
+
+        tvPost.setOnClickListener(v -> {
+
+            openPostDetails(postId);
+        });
+
+        tvName.setOnClickListener(v -> {
+
+            openPostDetails(postId);
+        });
+
+        btnShare.setOnClickListener(v -> {
+
+            sharePost(postText);
+        });
+
+        // =================================================
+        // ADD BUTTONS
+        // =================================================
+
+        actionLayout.addView(
+                btnLike
         );
 
         actionLayout.addView(
-                likeButton
+                btnComment
         );
 
         actionLayout.addView(
-                commentButton
+                btnShare
         );
 
-        actionLayout.addView(
-                shareButton
+        // =================================================
+        // ADD ALL TO MAIN LAYOUT
+        // =================================================
+
+        mainLayout.addView(
+                userLayout
         );
 
-        postLayout.addView(
+        mainLayout.addView(
+                tvPost
+        );
+
+        mainLayout.addView(
+                divider
+        );
+
+        mainLayout.addView(
+                countLayout
+        );
+
+        mainLayout.addView(
                 actionLayout
         );
 
-        // Add post to container
+        cardView.addView(
+                mainLayout
+        );
+
         postsContainer.addView(
-                postLayout
+                cardView
         );
     }
 
     // =====================================================
-    // Format Time
+    // OPEN POST DETAILS
     // =====================================================
 
-    private String getTimeText(Long timestamp) {
+    private void openPostDetails(
+            String postId
+    ) {
 
-        if (timestamp == null) {
-            return "Just now";
-        }
-
-        Date date =
-                new Date(timestamp);
-
-        SimpleDateFormat format =
-                new SimpleDateFormat(
-                        "dd MMM yyyy, hh:mm a",
-                        Locale.getDefault()
+        Intent intent =
+                new Intent(
+                        HomeFeedActivity.this,
+                        PostDetailsActivity.class
                 );
 
-        return format.format(date);
+        intent.putExtra(
+                "postId",
+                postId
+        );
+
+        startActivity(intent);
     }
 
     // =====================================================
-    // Reload When Returning To Home
+    // SHARE POST
     // =====================================================
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void sharePost(
+            String postText
+    ) {
 
-        if (firebaseAuth != null &&
-                firebaseAuth.getCurrentUser() != null) {
+        Intent shareIntent =
+                new Intent(
+                        Intent.ACTION_SEND
+                );
 
-            loadPosts();
-        }
+        shareIntent.setType(
+                "text/plain"
+        );
+
+        shareIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                postText
+        );
+
+        startActivity(
+                Intent.createChooser(
+                        shareIntent,
+                        "Share post"
+                )
+        );
     }
 }

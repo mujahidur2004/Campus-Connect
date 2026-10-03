@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@color/white">
 
-    <!-- Header -->
-
+    <!-- TOP BAR -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -19,45 +17,48 @@
 
         <TextView
             android:id="@+id/tvBack"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:gravity="center"
             android:text="‹"
-            android:textSize="35sp"
+            android:textSize="36sp"
+            android:textColor="@color/black"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Notices"
-            android:textSize="22sp"
-            android:textStyle="bold"/>
+            android:gravity="center"
+            android:text="Notifications"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
-        <Button
-            android:id="@+id/btnAddNotice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ Add"
-            android:textAllCaps="false"/>
+        <View
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
 
     </LinearLayout>
 
-    <!-- Notice List -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E5E5E5" />
+
+    <!-- NOTIFICATION LIST -->
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/noticeContainer"
+            android:id="@+id/notificationContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="20dp"/>
+            android:padding="10dp" />
 
     </ScrollView>
 
